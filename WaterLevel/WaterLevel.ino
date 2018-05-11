@@ -17,12 +17,10 @@ long WaterLevel(const int trigPin, const int echoPin) {
   // Clears the trigPin for two microseconds
   digitalWrite(trigPin, OUTPUT); 
   delayMicroseconds(2);
-
-  // Sets trigPin for 10 microseconds
+  // sets trigPin for 10 microseconds
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
-
   // Calculates distance using: D = S*T
   duration = pulseIn(echoPin, HIGH); // Waits for echo pin to go high which starts the timing
                                      // When echo pin goes low the timing stops
@@ -32,5 +30,6 @@ long WaterLevel(const int trigPin, const int echoPin) {
   waterHeight = tankHeight - distance;
   waterVolume = waterHeight * tankWidth * tankLength;
   return waterVolume;
+
 }
 
