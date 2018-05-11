@@ -14,13 +14,16 @@ void loop() {
 
 long WaterLevel(const int trigPin, const int echoPin) {
   long duration , distance, waterHeight, waterVolume ;
+  
   // Clears the trigPin for two microseconds
   digitalWrite(trigPin, OUTPUT); 
   delayMicroseconds(2);
+  
   // sets trigPin for 10 microseconds
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
+  
   // Calculates distance using: D = S*T
   duration = pulseIn(echoPin, HIGH); // Waits for echo pin to go high which starts the timing
                                      // When echo pin goes low the timing stops
