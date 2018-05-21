@@ -17,7 +17,7 @@ void setup() {
 void turbidity(int pin, float &voltage);
 
 void loop() {
-  turbidity(pin, NTU, voltage);
+  turbidity(pin, voltage);
   Serial.print("Voltage = ");
   Serial.println(voltage); // print out the value you read:
   delay(300);
