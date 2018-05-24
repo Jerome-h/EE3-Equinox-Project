@@ -11,7 +11,7 @@ struct tank {
 };
 
 //Initialise tanks being monitored. Input: {Height, Diameter} in metres
-struct tank tank2 = {0.095, 0.075} ;
+struct tank tank2 = {1, 1} ;
 
 void tankCapacity(struct tank &Tank, const int trigPin, const int echoPin);
 
