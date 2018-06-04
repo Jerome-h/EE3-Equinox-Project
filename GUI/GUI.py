@@ -11,6 +11,17 @@ def getfile(ftp, filename):
         "Error"
 
 
+def graph(temps, refresh):
+    plt.plot(temps, 'r', label='^C', marker='o')
+    plt.legend()
+
+    axes = plt.gca()
+
+    plt.draw()
+    plt.pause(refresh)
+    plt.clf()
+
+
 # Open ftp connection
 ftp = ftplib.FTP('ftp.drivehq.com', 'equinox_eee', 'equinox1234')
 
@@ -29,15 +40,3 @@ buff = gFile.read()
 print(buff)
 gFile.close()
 
-
-# -*- coding: utf-8 -*-
-
-def graph(temps, refresh):
-    plt.plot(temps, 'r', label='^C', marker='o')
-    plt.legend()
-
-    axes = plt.gca()
-
-    plt.draw()
-    plt.pause(refresh)
-    plt.clf()
