@@ -1,5 +1,8 @@
-from matplotlib import pyplot as plt
 import ftplib
+import csv
+from matplotlib import pyplot as plt
+
+temps = []
 
 
 def getfile(ftp, filename):
@@ -10,6 +13,13 @@ def getfile(ftp, filename):
         "Error"
 
 
+def readfile(filename, parameter):
+    with open(filename) as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            parameter.append(row['Temp'])
+
+
 def graph(temps, refresh):
     plt.plot(temps, 'r', label='^C', marker='o')
     plt.legend()
@@ -17,8 +27,8 @@ def graph(temps, refresh):
     axes = plt.gca()
 
     plt.draw()
-    plt.pause(refresh)
-    plt.clf()
+    # plt.pause(refresh)
+    # plt.clf()
 
 
 # Open ftp connection
@@ -30,12 +40,11 @@ files = ftp.dir()
 print(files)
 
 ftp.cwd('/')  # change directory to /pub/
-getfile(ftp, 'data.txt')
+getfile(ftp, 'data.csv')
 ftp.close()
 # Print the readme file contents
 print("\nData File Output:")
-gFile = open("data.txt", "r")
-buff = gFile.read()
-print(buff)
-gFile.close()
+readfile('data.csv', temps)
+graph(temps, 1)
+plt.show()
 
