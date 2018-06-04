@@ -5,7 +5,6 @@ import ftplib
 def getfile(ftp, filename):
     try:
         ftp.retrbinary("RETR " + filename, open(filename, 'wb').write)
-
     except:
         print
         "Error"
