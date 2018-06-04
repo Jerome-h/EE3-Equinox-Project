@@ -2,7 +2,8 @@ import ftplib
 import csv
 from matplotlib import pyplot as plt
 
-Temps = []
+Temps = dict()
+
 
 def getfile(ftp, filename):
     try:
@@ -12,11 +13,13 @@ def getfile(ftp, filename):
         "Error"
 
 
-def readfile(filename, parameter, array):
+def readfile(filename, parameter, dictionary):
     with open(filename) as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            array.append(row['%s' % parameter])
+            print(row['Time'])
+            #time = row['Time']
+            #dictionary[time] = row['%s' % parameter]
 
 
 def graph(temps, refresh):
