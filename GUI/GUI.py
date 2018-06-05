@@ -54,7 +54,7 @@ while True:
     # Retrieve desired files
     getfile(ftpserver, 'data.csv')
     ftpserver.close()
-    
+
     # Read files into dictionaries to hold values
     readfile('data.csv', 'Temp', Temps)
 
