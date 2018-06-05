@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 
 Temps = dict()
 
-#plt.ion()
+plt.ion()
 
 # Function to get file from the ftp server and save locally
 def getfile(ftp, filename):
