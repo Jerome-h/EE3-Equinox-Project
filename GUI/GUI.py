@@ -38,6 +38,7 @@ def graphLine(dictionary, title, xlabel, ylabel, refresh):
     plt.pause(refresh)
 
 
+# While loop for constant updating of the data
 while True:
     # Open ftp connection
     ftpserver = ftplib.FTP('ftp.byethost12.com', 'b12_22196264', 'equinox1234')
