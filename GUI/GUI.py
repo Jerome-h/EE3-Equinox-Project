@@ -38,9 +38,6 @@ def graphLine(dictionary, title, xlabel, ylabel, refresh):
     plt.pause(refresh)
 
 
-
-
-
 while True:
     # Open ftp connection
     ftpserver = ftplib.FTP('ftp.drivehq.com', 'equinox_eee', 'equinox1234')
