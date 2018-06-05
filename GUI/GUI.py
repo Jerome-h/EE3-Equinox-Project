@@ -15,7 +15,7 @@ def getfile(ftp, filename):
 
 def readfile(filename, parameter, dictionary):
     with open(filename) as csvfile:
-        reader = csv.DictReader(csvfile)
+        reader = csv.DictReader(csvfile, delimiter = ',')
         for row in reader:
             print(row['Time'])
             #time = row['Time']
