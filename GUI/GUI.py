@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 
 Temps = dict()
 
-plt.ion()
+#plt.ion()
 
 # Function to get file from the ftp server and save locally
 def getfile(ftp, filename):
@@ -20,8 +20,8 @@ def readfile(filename, parameter, dictionary):
     with open(filename) as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            time = row['Time']
-            dictionary[time] = row['%s' % parameter]
+            time = int(row['Time'])
+            dictionary[time] = int(row['%s' % parameter])
 
 
 # Plots the parameter dictionary as a line graph, also passes label inputs
@@ -40,13 +40,13 @@ def graphLine(dictionary, title, xlabel, ylabel, refresh):
 
 while True:
     # Open ftp connection
-    ftpserver = ftplib.FTP('ftp.drivehq.com', 'equinox_eee', 'equinox1234')
+    ftpserver = ftplib.FTP('ftp.byethost12.com', 'b12_22196264', 'equinox1234')
 
     # List the files in the current directory
     print("File List:")
     files = ftpserver.dir()
     print(files)
-    ftpserver.cwd('/')  # change directory to /pub/
+    ftpserver.cwd('/htdocs/')  # change directory to /pub/
 
     # Retrieve desired files
     getfile(ftpserver, 'data.csv')
