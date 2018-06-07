@@ -6,6 +6,7 @@ Temps = dict()
 
 plt.ion()
 
+
 # Function to get file from the ftp server and save locally
 def getfile(ftp, filename):
     try:
@@ -21,7 +22,7 @@ def readfile(filename, parameter, dictionary):
         reader = csv.DictReader(csvfile)
         for row in reader:
             time = int(row['Time'])
-            dictionary[time] = int(row['%s' % parameter])
+            dictionary[time] = int(row['{}'.format(parameter)])
 
 
 # Plots the parameter dictionary as a line graph, also passes label inputs
@@ -31,9 +32,9 @@ def graphLine(dictionary, title, xlabel, ylabel, refresh):
     plt.figure(title)
     plt.clf()
     plt.plot(x, y, 'r', marker='o')
-    plt.xlabel('%s' % xlabel)
-    plt.ylabel('%s' % ylabel)
-    plt.title('%s' % title)
+    plt.xlabel('{}'.format(xlabel))
+    plt.ylabel('{}'.format(ylabel))
+    plt.title('{}'.format(title))
     plt.draw()
     plt.pause(refresh)
 
