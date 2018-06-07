@@ -4,7 +4,6 @@ import datetime
 from matplotlib import pyplot as plt
 
 Temps = dict()
-
 plt.ion()
 
 
@@ -13,8 +12,7 @@ def getfile(ftp, filename):
     try:
         ftp.retrbinary("RETR " + filename, open(filename, 'wb').write)
     except:
-        print
-        "Error"
+        print("Error")
 
 
 # Function to read CSV file and create a dictionary with key as time and parameter as value
@@ -31,10 +29,12 @@ def graphLine(dictionary, title, xlabel, ylabel, refresh):
     lists = sorted(dictionary.items())
     print(lists)
     x, y = zip(*lists)
+    xn = range(len(x))  # map your string labels to integers
     plt.figure(title)
     plt.clf()
-    plt.plot(x, y, 'r', marker='o')
-    plt.xlabel('{}'.format(xlabel))
+    plt.plot(xn, y, 'r', marker='o')
+    plt.xticks(xn, x)   # set it to the string values
+    plt.xlabel('{}'.format(xlabel)) 
     plt.ylabel('{}'.format(ylabel))
     plt.title('{}'.format(title))
     plt.draw()
@@ -49,7 +49,6 @@ while True:
     # List the files in the current directory
     print("File List:")
     files = ftpserver.dir()
-    print(files)
     ftpserver.cwd('/htdocs/')  # change directory to /pub/
 
     # Retrieve desired files
@@ -63,5 +62,3 @@ while True:
     graphLine(Temps, 'Temperature', 'Time (s)', 'Temp (^C)', 1)
     #graphLine(Temps, 'Temperature2', 'Time (s)', 'Temp (^C)', 1)
     # plt.show()
-
-
