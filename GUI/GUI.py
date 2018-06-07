@@ -1,5 +1,6 @@
 import ftplib
 import csv
+import datetime
 from matplotlib import pyplot as plt
 
 Temps = dict()
@@ -21,13 +22,14 @@ def readfile(filename, parameter, dictionary):
     with open(filename) as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            time = int(row['Time'])
-            dictionary[time] = int(row['{}'.format(parameter)])
+            time = row['Time']
+            dictionary[time] = float(row['{}'.format(parameter)])
 
 
 # Plots the parameter dictionary as a line graph, also passes label inputs
 def graphLine(dictionary, title, xlabel, ylabel, refresh):
     lists = sorted(dictionary.items())
+    print(lists)
     x, y = zip(*lists)
     plt.figure(title)
     plt.clf()
@@ -56,10 +58,10 @@ while True:
 
     # Read files into dictionaries to hold values
     readfile('data.csv', 'Temp', Temps)
-
+    print(Temps)
     # Graph data
     graphLine(Temps, 'Temperature', 'Time (s)', 'Temp (^C)', 1)
-    graphLine(Temps, 'Temperature2', 'Time (s)', 'Temp (^C)', 1)
+    #graphLine(Temps, 'Temperature2', 'Time (s)', 'Temp (^C)', 1)
     # plt.show()
 
 
