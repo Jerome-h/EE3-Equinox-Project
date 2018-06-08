@@ -3,6 +3,7 @@ import csv
 import datetime
 from matplotlib import pyplot as plt
 import os
+import time
 
 Temps = dict()
 plt.ion()
@@ -24,10 +25,13 @@ def readfile(filename, parameter, dictionary):
             time = row['Time']
             dictionary[time] = float(row['{}'.format(parameter)])
 
-# Function to send file to the FTP server
+# Function to send data file to the FTP server
 def uploadfile(ftp, filename):
     ftp.storbinary("APPE " + filename, open(filename, 'rb'))
 
+# Function to send file to the FTP server
+def uploadfile2(ftp, filename):
+    ftp.storbinary("STOR " + filename, open(filename, 'rb'))
 
 # Plots the parameter dictionary as a line graph, also passes label inputs
 def graphLine(dictionary, title, xlabel, ylabel, refresh):
@@ -60,43 +64,50 @@ ftpserver = ftplib.FTP('ftp.byethost12.com', 'b12_22196264', 'equinox1234')
 files = ftpserver.dir()
 ftpserver.cwd('/htdocs/')  # change directory to /pub/
 
-# Retrieve desired files
-getfile(ftpserver, 'data.csv')
-print("Data content from data.csv:")
-with open('data.csv', 'r') as fin:
-    print(fin.read())
+while True:
+    try:
+        # Retrieve boolean file
+        getfile(ftpserver, "bool.txt")
+        print("checking if new data is uploaded to the FTP server..")
+        time.sleep(0.5)
+        f = open("bool.txt","r")
+        
+        buff = dict()
 
-# Read files into dictionaries to hold values
-readfile('data.csv', 'Distance', Temps)
-
-# Graph data
-graphLine(Temps, 'Distance', 'Time', 'Dist', 1)
-
-# remove data.csv
-os.remove("data.csv")
-buff = dict()
-
-# Retrieve file data2.csv
-getfile(ftpserver, 'data2.csv')
+        # Retrieve file data2.csv
+        getfile(ftpserver, 'data2.csv')
     
-# Read file data2.csv into dictionaries to hold values
-readfile('data2.csv', 'Distance', buff)
+        # Read file data2.csv into dictionaries to hold values
+        readfile('data2.csv', 'Distance', buff)
 
-# Write the dictionary that is to be appended back to data.csv    
-with open('data.csv','w') as csvfile: 
-    w = csv.writer(csvfile)
-    w.writerows(sorted(buff.items()))
+        # if bool is TRUE, update graph and data.csv in the server
+        if f.read() == 'TRUE': 
+            f.close()
+            # Write the dictionary that is to be appended back to data.csv    
+            with open('data.csv','w') as csvfile: 
+                w = csv.writer(csvfile)
+                w.writerows(sorted(buff.items()))
 
-# Merge the latest dictionary to the previous dictionary before graphing
-Temps = merge_two_dicts(Temps, buff)
+            # Merge the latest dictionary to the previous dictionary before graphing
+            Temps = merge_two_dicts(Temps, buff)
 
-# Graph updated data
-graphLine(Temps, 'Distance', 'Time', 'Dist', 1)
+            print("Uploading file now . . .")
+            uploadfile(ftpserver, "data.csv") # data.csv will now have the new data
+            with open("bool.txt","w") as f:
+                f.write("FALSE") 
+            f.close()
+            uploadfile2(ftpserver, "bool.txt") # set bool to FALSE
 
-print("Uploading file now . . .")
-uploadfile(ftpserver, 'data.csv') # data.csv will now have the new data
-getfile(ftpserver, 'data.csv') # download data.csv to see the updated data
-print("Updated data content:")
-with open('data.csv', 'r') as fin:
-    print(fin.read())
-ftpserver.close()
+        # show data from data.csv
+        getfile(ftpserver, 'data.csv')
+        f = open('data.csv', 'r')
+        print('Data content of data.csv')
+        print(f.read())
+        f.close()
+        # Graph updated data
+        graphLine(Temps, 'Distance', 'Time', 'Dist', 1)
+
+    # break the loop using "ctrl c"
+    except KeyboardInterrupt:
+        break
+
