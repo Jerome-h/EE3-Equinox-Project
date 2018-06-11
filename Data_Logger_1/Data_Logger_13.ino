@@ -18,7 +18,7 @@ const int CSpin = 53;     // defines chip select pin for arduino (uno pin 10, me
 RTClib RTC;               // needed for clock
 volatile int pulseCount;  // counts the rising edges of a signal (for flow rate)
 float batteryTMean = 0.0; // mean battery temperature
-int ONE_WIRE_BUS = 3;     // for water temperature: Data wire is plugged into pin 3 on the Arduino 
+int ONE_WIRE_BUS = 14;     // Digital pin for water temperature
 OneWire oneWire(ONE_WIRE_BUS); // oneWire instance to communicate with any OneWire devices 
 DallasTemperature sensors(&oneWire); // Pass oneWire instance by reference to Dallas Temperature
 InetGSM inet;             // needed for data transmission
@@ -67,9 +67,9 @@ const int batteryStatusFrequency = 15;       // Enter how often measurments for 
 const int loopDelay = 1000;
 
 const int transmitFrequency = 60; // Enter how often measurments should transmitted (in seconds) 
-const int sensorNum = 3;          // Enter the number of sensors
+const int sensorNum = 5;          // Enter the number of sensors
 
-struct sensor sensorArray[sensorNum] = {{1, 2, 3, -1},{4, A0, A5, -1},{5, A1, A4, 13}};       
+struct sensor sensorArray[sensorNum] = {{1, 5, 6, -1},{3, A10, -1, -1},{6, A12, -1, -1},{7, 14, -1, -1},{8, A11, -1, -1}};       
                                                           // Enter the sensor type, input pin and output pin
                                                           // sensor type found from list of pre-set sensors
                                                           // if no output pin is required enter -1 
@@ -114,7 +114,7 @@ void setup() {
   Serial.begin(9600);       // opens serial port, sets data rate to 9600 bps
   Wire.begin();             // needed for clock
   pinMode(CSpin, OUTPUT);   // needed for SD card
-
+  sensors.begin();          // needed for water temperature
   // SD card check
   if(SD.begin()){
     Serial.println("SD card okay");
@@ -159,7 +159,6 @@ void setup() {
         printHeader(waterStatusFile, "PH");
         break; 
       case 7: // Temperature
-        sensors.begin();  // needed for water temperature sensor
         printHeader(waterStatusFile, "Temp");
         break;
       case 8:
@@ -201,7 +200,7 @@ void loop() {
 
   if(now.second() % 60 == 0){
     //sendDataFTP(batteryStatusFile);
-    sendData(waterStatusFile);
+    //sendData(waterStatusFile);
   }
   
   delay(loopDelay);
@@ -656,6 +655,7 @@ void logSensorMeasurements(DateTime now, char fileName[], bool isBatterStatus){
           
           break; 
         case 7:
+          sensors.begin()
           sensors.requestTemperatures(); // Send the command to get temperature readings 
                     
           //dataFile.print("Water temperature (C): ");
@@ -780,7 +780,15 @@ float calcPH(int inPin){
 
 float turbidity(int turbPin){
   int sensorValue = analogRead(turbPin);    // read the input on analog pin 0:
-  return sensorValue * (5 / 1024.0);     // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
+  float voltage = sensorValue * (5 / 1024.0); // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
+  if(voltage < 2.5){
+    voltage = 2.5;
+  }
+  float NTU = -1120.4*sq(voltage) + 5742.3*voltage - 4352.9;
+  if(NTU < 0){
+    NTU = 0;
+  }
+  return NTU;
 }
 
 
