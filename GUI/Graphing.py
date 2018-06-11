@@ -40,9 +40,11 @@ def graphLine(dictionary, title, xlabel, ylabel, refresh):
     xn = range(len(x))  # map your string labels to integers
     plt.figure(title)
     plt.clf()
-    plt.plot(xn, y, 'r', marker='o')
+    plt.ylim(0, 45)
+    plt.plot(xn, y, 'g', marker='o')
     plt.xticks(xn, x)   # set it to the string values
     plt.xticks(rotation=45)
+    plt.xticks(ha='right')
     plt.subplots_adjust(bottom=0.23)
     plt.xlabel('{}'.format(xlabel)) 
     plt.ylabel('{}'.format(ylabel))
@@ -78,7 +80,7 @@ while True:
         getfile(ftpserver, 'data2.csv')
     
         # Read file data2.csv into dictionaries to hold values
-        readfile('data2.csv', 'Distance', buff)
+        readfile('data2.csv', 'Flow Rate', buff)
 
         # if bool is TRUE, update graph and data.csv in the server
         if f.read() == 'TRUE': 
@@ -105,7 +107,7 @@ while True:
         print(f.read())
         f.close()
         # Graph updated data
-        graphLine(Temps, 'Distance', 'Time', 'Dist', 1)
+        graphLine(Temps, 'Flow Rate', 'Date and Time', 'Flow Rate mL/s', 1)
 
     # break the loop using "ctrl c"
     except KeyboardInterrupt:
