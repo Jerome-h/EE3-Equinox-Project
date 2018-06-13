@@ -2,10 +2,10 @@
  The circuit:
  * LCD RS pin to digital pin 12
  * LCD Enable pin to digital pin 11
- * LCD D4 pin to digital pin 5
- * LCD D5 pin to digital pin 4
- * LCD D6 pin to digital pin 3
- * LCD D7 pin to digital pin 2
+ * LCD D4 pin to digital pin 10
+ * LCD D5 pin to digital pin 9
+ * LCD D6 pin to digital pin 8
+ * LCD D7 pin to digital pin 7
  * LCD R/W pin to ground
  * 10K resistor:
  * ends to +5V and ground
@@ -17,7 +17,7 @@
 
 // initialize the library by associating any needed LCD interface pin
 // with the arduino pin number it is connected to
-const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+const int rs = 12, en = 11, d4 = 10, d5 = 9, d6 = 8, d7 = 7;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 int delayPrint = 5000;
