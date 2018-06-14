@@ -150,6 +150,8 @@ ftpserver.cwd('/htdocs/')  # change directory to /pub/
 #getfile(ftpserver, 'waterNew.csv')
 getfile(ftpserver, 'waterOld.csv')
 
+
+# Loop to allow user to change data. Note graph becomes unresponsive after refresh pause time has passed
 while True:
     print('')
     # input dates
