@@ -11,6 +11,7 @@ dictNew = dict()
 dictRange = dict()
 plt.ion()
 
+
 ########################## FUNCTIONS ######################################
 
 # Function to get file from the ftp server and save locally
@@ -34,22 +35,30 @@ def readfile(filename, parameter, dictionary):
 def readheader(filename):
     with open(filename) as csvfile:
         reader = csv.reader(csvfile)
-        print("Enter one of the following parameters except 'Time':")
-        print(next(reader))
+        print("Enter one of the following parameters:")
+        headers = list(next(reader))
+        for index, item in enumerate(headers):
+            if item == 'Time':
+                del(headers[index])
+        print(headers)
+
 
 # Function to send data file to the FTP server
 def appendfile(ftp, filename):
     ftp.storbinary("APPE " + filename, open(filename, 'rb'))
 
+
 # Function to send file to the FTP server
 def uploadfile(ftp, filename):
     ftp.storbinary("STOR " + filename, open(filename, 'rb'))
+
 
 # merging 2 dicitionaries
 def merge_two_dicts(x, y):
     z = x.copy()   # start with x's keys and values
     z.update(y)    # modifies z with y's keys and values & returns None
     return z
+
 
 # function to specify the range to be graphed
 def getRange(startDate, endDate, dictionary, dictionaryRange):
@@ -67,7 +76,6 @@ def getRange(startDate, endDate, dictionary, dictionaryRange):
             endFound = True
 
 
-            
 # Plots the parameter dictionary as a line graph, also passes label inputs
 def graphLine(dictionary, refresh, startDate, endDate, paramType):
     xlabel = 'Date and Time'
