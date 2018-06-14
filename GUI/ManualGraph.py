@@ -75,26 +75,37 @@ def graphLine(dictionary, refresh, startDate, endDate, paramType):
         title = "Water Level"
         ylabel = "Level (m)"
         ymax = 0.40
-    if paramType == "Flow Rate":
+        ymin = -0.005
+    if paramType == "Flow 2":
         title = "Water Flow Rate"
         ylabel = "Flow Rate (L/m)"
         ymax = 50
-    if paramType == "Water Temp":
+        ymin = -1
+    if paramType == "Flow 3":
+        title = "Water Flow Rate"
+        ylabel = "Flow Rate (L/m)"
+        ymax = 50
+        ymin = -1
+    if paramType == "Temp":
         title = "Water Temperature"
         ylabel = "Temperature (^C)"
         ymax = 80
+        ymin = 0
     if paramType == "EC":
         title = "Electric Conductivity"
         ylabel = "Electric Conductivity (mS/m)"
-        ymax = 500
-    if paramType == "Turbidity":
+        ymax = 3000
+        ymin = 0
+    if paramType == "Turb":
         title = "Turbidity"
         ylabel = "Turbidity (NTU)"
-        ymax = 3200
+        ymax = 3100
+        ymin = -10
     if paramType == "PH":
         title = "pH"
         ylabel = "pH"
         ymax = 14
+        ymin = 0
     # haven't put in parameters for battery yet 
 
     lists = sorted(dictionary.items())
@@ -102,15 +113,19 @@ def graphLine(dictionary, refresh, startDate, endDate, paramType):
     xn = range(len(x))  # map your string labels to integers
     plt.figure(title)
     plt.clf()
-    plt.ylim(0,ymax)
-    plt.plot(xn, y, 'g', marker='o')
-    plt.xticks(xn, x)   # set it to the string values
-    plt.xticks(rotation=45)
-    plt.xticks(ha='right')
+    plt.ylim(ymin,ymax)
+    plt.plot(xn, y, 'g')
     plt.subplots_adjust(bottom=0.23)
     plt.xlabel('{}'.format(xlabel)) 
     plt.ylabel('{}'.format(ylabel))
     plt.title('{}'.format(title))
+    xlabels = list(x)
+    for index, item in enumerate(xlabels):
+        if (index % 3):
+            xlabels[index] = " "
+    plt.xticks(xn, xlabels)   # set it to the string values
+    plt.xticks(rotation=45)
+    plt.xticks(ha='right')
     plt.draw()
     plt.pause(refresh)
     
@@ -123,29 +138,25 @@ ftpserver = ftplib.FTP('ftp.byethost12.com', 'b12_22196264', 'equinox1234')
 files = ftpserver.dir()
 ftpserver.cwd('/htdocs/')  # change directory to /pub/
 
-filename = 'waterNew.csv'
-if filename in ftpserver.nlst():
-    print("FILE FOUND!")
-    # input dates
-    startDate = input("Start date = ")
-    endDate = input("End date = ")
 
-    # Retrieve file data2.csv
-    #getfile(ftpserver, 'waterNew.csv')
-    getfile(ftpserver, 'waterOld.csv')
+# input dates
+startDate = input("Start date = ")
+endDate = input("End date = ")
 
-    # input parameter
-    readheader('waterOld.csv')
-    param = input("Parameter = ")
+# Retrieve file data2.csv
+#getfile(ftpserver, 'waterNew.csv')
+getfile(ftpserver, 'waterOld.csv')
 
-    readfile('waterOld.csv', param, dictOld)
+# input parameter
+readheader('waterOld.csv')
+param = input("Parameter = ")
 
-    # hold values for specific range
-    getRange(startDate, endDate, dictOld, dictRange)
-    print(sorted(dictRange.items()))
+readfile('waterOld.csv', param, dictOld)
 
-    # plot the graph
-    graphLine(dictRange, 1, startDate, endDate, param)
+# hold values for specific range
+getRange(startDate, endDate, dictOld, dictRange)
+print(sorted(dictRange.items()))
 
-else:
-    print("FILE NOT FOUND")
+# plot the graph
+graphLine(dictRange, 1, startDate, endDate, param)
+
