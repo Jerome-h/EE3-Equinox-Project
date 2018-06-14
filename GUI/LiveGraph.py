@@ -72,7 +72,7 @@ def getRange(startDate, endDate, dictionary, dictionaryRange):
 
             
 # Plots the parameter dictionary as a line graph, also passes label inputs
-def graphLine(dictionary, xlabel, ylabel, title, refresh, ymax, row, column, index, colour):
+def graphLine(dictionary, xlabel, ylabel, title, refresh, ymin, ymax, row, column, index, colour):
     lists = sorted(dictionary.items())
     x, y = zip(*lists)
     x = x[-41:] # Extract last 21 values to plot
@@ -80,7 +80,7 @@ def graphLine(dictionary, xlabel, ylabel, title, refresh, ymax, row, column, ind
     xn = range(len(x))  # map your string labels to integers
     plt.subplot(row, column, index)
     plt.cla()
-    plt.ylim(0,ymax)
+    plt.ylim(ymin,ymax)
     plt.plot(xn, y, colour)
     plt.subplots_adjust(bottom=0.15)
     plt.xlabel('{}'.format(xlabel)) 
@@ -148,22 +148,22 @@ while True:
         plt.figure('Water Measurements')
         
         readfile('waterOld.csv', 'Level', dictLevel)
-        graphLine(dictLevel, 'Date and Time', 'Level', 'Water Level', 0.1, 0.4, 2, 3, 1, 'b')
+        graphLine(dictLevel, 'Date and Time', 'Level', 'Water Level', 0.1, -0.005, 0.4, 2, 3, 1, 'b')
 
         readfile('waterOld.csv', 'Flow 2', dictFlow)
-        graphLine(dictFlow, 'Date and Time', 'Flow Rate', 'Flow Rate', 0.1, 50, 2, 3, 2, 'c')
+        graphLine(dictFlow, 'Date and Time', 'Flow Rate', 'Flow Rate', 0.1, -1, 50, 2, 3, 2, 'c')
 
         readfile('waterOld.csv', 'Turb', dictTurb)
-        graphLine(dictTurb, 'Date and Time', 'Turbidity', 'Turbidity', 0.1, 3100, 2, 3, 3, 'g')
+        graphLine(dictTurb, 'Date and Time', 'Turbidity', 'Turbidity', 0.1, -10, 3100, 2, 3, 3, 'g')
 
         readfile('waterOld.csv', 'PH', dictPH)
-        graphLine(dictPH, 'Date and Time', 'pH', 'pH', 0.1, 14, 2, 3, 4, 'm')
+        graphLine(dictPH, 'Date and Time', 'pH', 'pH', 0.1, 0, 14, 2, 3, 4, 'm')
 
         readfile('waterOld.csv', 'Temp', dictTemp)
-        graphLine(dictTemp, 'Date and Time', 'Temperature', 'Temperature', 0.1, 80, 2, 3, 5, 'r')
+        graphLine(dictTemp, 'Date and Time', 'Temperature', 'Temperature', 0.1, 0, 80, 2, 3, 5, 'r')
 
         readfile('waterOld.csv', 'EC', dictEC)
-        graphLine(dictEC, 'Date and Time', 'EC', 'Electric Conductivity', 0.1, 5000, 2, 3, 6, 'k')
+        graphLine(dictEC, 'Date and Time', 'EC', 'Electric Conductivity', 0.1, 0, 5000, 2, 3, 6, 'k')
 
         plt.tight_layout()
         
