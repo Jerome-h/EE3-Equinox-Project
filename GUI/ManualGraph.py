@@ -9,7 +9,7 @@ import re
 dictOld = dict()
 dictNew = dict()
 dictRange = dict()
-plt.ion()
+# plt.ion()
 
 
 ########################## FUNCTIONS ######################################
@@ -120,7 +120,7 @@ def graphLine(dictionary, refresh, startDate, endDate, paramType):
     x, y = zip(*lists)
     xn = range(len(x))  # map your string labels to integers
     plt.figure(title)
-    plt.clf()
+    # plt.clf()
     plt.ylim(ymin,ymax)
     plt.plot(xn, y, 'g')
     plt.subplots_adjust(bottom=0.23)
@@ -134,8 +134,8 @@ def graphLine(dictionary, refresh, startDate, endDate, paramType):
     plt.xticks(xn, xlabels)   # set it to the string values
     plt.xticks(rotation=45)
     plt.xticks(ha='right')
-    plt.draw()
-    plt.pause(refresh)
+    # plt.draw()
+    # plt.pause(refresh)
     
 ############################### MAIN CODE ####################################
 
@@ -167,4 +167,4 @@ print(sorted(dictRange.items()))
 
 # plot the graph
 graphLine(dictRange, 1, startDate, endDate, param)
-
+plt.show()
