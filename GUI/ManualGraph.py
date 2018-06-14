@@ -9,7 +9,7 @@ import re
 dictOld = dict()
 dictNew = dict()
 dictRange = dict()
-# plt.ion()
+plt.ion()
 
 
 ########################## FUNCTIONS ######################################
@@ -119,8 +119,8 @@ def graphLine(dictionary, refresh, startDate, endDate, paramType):
     lists = sorted(dictionary.items())
     x, y = zip(*lists)
     xn = range(len(x))  # map your string labels to integers
-    plt.figure(title)
-    # plt.clf()
+    # plt.figure(title)
+    plt.clf()
     plt.ylim(ymin,ymax)
     plt.plot(xn, y, 'g')
     plt.subplots_adjust(bottom=0.23)
@@ -134,8 +134,8 @@ def graphLine(dictionary, refresh, startDate, endDate, paramType):
     plt.xticks(xn, xlabels)   # set it to the string values
     plt.xticks(rotation=45)
     plt.xticks(ha='right')
-    # plt.draw()
-    # plt.pause(refresh)
+    plt.draw()
+    plt.pause(refresh)
     
 ############################### MAIN CODE ####################################
 
@@ -146,25 +146,25 @@ ftpserver = ftplib.FTP('ftp.byethost12.com', 'b12_22196264', 'equinox1234')
 files = ftpserver.dir()
 ftpserver.cwd('/htdocs/')  # change directory to /pub/
 
-
-# input dates
-startDate = input("Start date = ")
-endDate = input("End date = ")
-
 # Retrieve file data2.csv
 #getfile(ftpserver, 'waterNew.csv')
 getfile(ftpserver, 'waterOld.csv')
 
-# input parameter
-readheader('waterOld.csv')
-param = input("Parameter = ")
+while True:
+    print('')
+    # input dates
+    startDate = input("Start date = ")
+    endDate = input("End date = ")
+    # input parameter
+    readheader('waterOld.csv')
+    param = input("Parameter = ")
 
-readfile('waterOld.csv', param, dictOld)
+    readfile('waterOld.csv', param, dictOld)
 
-# hold values for specific range
-getRange(startDate, endDate, dictOld, dictRange)
-print(sorted(dictRange.items()))
+    # hold values for specific range
+    getRange(startDate, endDate, dictOld, dictRange)
+    print(sorted(dictRange.items()))
 
-# plot the graph
-graphLine(dictRange, 1, startDate, endDate, param)
-plt.show()
+    # plot the graph
+    graphLine(dictRange, 8, startDate, endDate, param)
+
