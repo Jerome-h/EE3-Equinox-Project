@@ -820,34 +820,50 @@ float batteryTemp(int sensorPin, int sensorPin2){
 
 float batteryHealth(int voltagePin, int currentPin, int gatePin){
   
-  float State_Health = 0.0, OCvoltage = 0.0, CCvoltage = 0.0, current = 0, R_internal = 0.0;
+  float State_Health = 0.0, OCvoltage = 0.0, CCvoltage = 0.0, current = 0, R_internal = 0.0; 
   int OCVreading = 0, CCVreading = 0;      
 
   while(OCVreading <= CCVreading){
     
     //turn off transistor to measure OCV
     digitalWrite(gatePin, LOW);
-    delay(5);
+    delay(1);
   
-    volt_compensated(voltagePin, OCVreading, OCvoltage);  //read and correct open circuit voltage
+    OCvoltage = volt_compensated(voltagePin, OCVreading);  //read and correct open circuit voltage
+    OCvoltage += volt_compensated(voltagePin, OCVreading);
+    OCvoltage += volt_compensated(voltagePin, OCVreading);
+    OCvoltage /= 3;
 
     //turn on transistor to measure CCV and current
     digitalWrite(gatePin, HIGH);
-    delay(5);
+    delay(1);
     
-    volt_compensated(voltagePin, CCVreading, CCvoltage);  //read and correct closed circuit voltage
+    CCvoltage = volt_compensated(voltagePin, CCVreading);  //read and correct closed circuit voltage
+    CCvoltage += volt_compensated(voltagePin, CCVreading); 
+    CCvoltage += volt_compensated(voltagePin, CCVreading); 
+    CCvoltage /= 3;
   }
   
   current = current_reading(currentPin);                //read load current
+  current += current_reading(currentPin);
+  current += current_reading(currentPin);
+  current += current_reading(currentPin);
+  current += current_reading(currentPin);
+  current /= 5;
   R_internal = (OCvoltage - CCvoltage)/current;         //calculate internal resistance
   State_Health = 100* (R_internal - 1.0)/(0.084 - 1.0); // calculate state health
+  
+  if(State_Health > 100){
+    State_Health = 100;
+  }
   
   return State_Health;
 }
 
-void volt_compensated(int sensorPin, int& value, float& voltage){
+float volt_compensated(int sensorPin, int& value){
   value = analogRead(sensorPin)+(batteryTMean - 25)*(0.1769472);
-  voltage = (value * 25.0) / 1024.0;
+  float voltage = (value * 25.0) / 1024.0;
+  return voltage;
 }
 
 float current_reading(int sensorPin){
