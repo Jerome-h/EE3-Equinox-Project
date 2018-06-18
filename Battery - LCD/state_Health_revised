@@ -18,12 +18,13 @@ void loop() {
   Serial.print("state of health: "); 
   Serial.print(stateHealth); 
   Serial.println(" %");
-  delay(5000);
+  delay(1000);
 }
 
 float batteryHealth(int tempPin1, int tempPin2, int voltagePin, int currentPin, int gatePin){
   
-  float State_Health = 0.0, temperatureC = 0.0, OCvoltage = 0.0, CCvoltage = 0.0, current = 0, R_internal = 0.0;
+  float State_Health = 0.0, temperatureC = 0.0, OCvoltage = 0.0, CCvoltage = 0.0, R_internal = 0.0;
+  float current = 0, current1 = 0, current2 = 0, current3 = 0,current4 = 0;
   int OCVreading = 0, CCVreading = 0;      
 
   temperatureC = temp(tempPin1, tempPin2);  // read battery temperature
@@ -42,13 +43,18 @@ float batteryHealth(int tempPin1, int tempPin2, int voltagePin, int currentPin, 
     
     volt_compensated(temperatureC, voltagePin, CCVreading, CCvoltage);  //read and correct closed circuit voltage
   }
-  //Serial.println(OCvoltage);Serial.println(CCvoltage);
   current = current_reading(currentPin);                //read load current
-  //Serial.println(current);
+  current1 = current_reading(currentPin);
+  current2 = current_reading(currentPin);
+  current3 = current_reading(currentPin);
+  current4 = current_reading(currentPin);
+  current += (current1 + current2 + current3 + current4)/5;
   R_internal = (OCvoltage - CCvoltage)/current;         //calculate internal resistance
-  //Serial.println(R_internal);
   State_Health = 100* (R_internal - 1.0)/(0.084 - 1.0); // calculate state health
-  
+
+  if(State_Health > 100){
+    State_Health = 100;
+  }
   return State_Health;
 }
 
