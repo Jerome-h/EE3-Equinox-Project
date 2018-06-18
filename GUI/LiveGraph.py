@@ -123,7 +123,7 @@ while True:
         getfile(ftpserver, 'waterOld.csv')
         print("checking for new data...")
         if "waterNew.csv" in ftpserver.nlst():
-            time.sleep(12)
+            time.sleep(17)
             print("FILE FOUND")
             getfile(ftpserver, 'waterNew.csv')
             
