@@ -10,8 +10,6 @@ import os
 import time
 import re
 
-
-
 plt.ion()
 
 ########################## FUNCTIONS ######################################
@@ -75,8 +73,8 @@ def getRange(startDate, endDate, dictionary, dictionaryRange):
 def graphLine(dictionary, xlabel, ylabel, title, refresh, ymin, ymax, row, column, index, colour):
     lists = sorted(dictionary.items())
     x, y = zip(*lists)
-    x = x[-41:] # Extract last 21 values to plot
-    y = y[-41:]
+    x = x[-51:] # Extract last 21 values to plot
+    y = y[-51:]
     xn = range(len(x))  # map your string labels to integers
     plt.subplot(row, column, index)
     plt.cla()
@@ -88,7 +86,7 @@ def graphLine(dictionary, xlabel, ylabel, title, refresh, ymin, ymax, row, colum
     plt.title('{}'.format(title))
     xlabels = list(x)
     for index, item in enumerate(xlabels):
-        if (index % 4):
+        if (index % 3):
             xlabels[index] = " "
     plt.xticks(xn, xlabels)   # set it to the string values
     plt.xticks(rotation=45)
@@ -105,15 +103,16 @@ def merge_two_dicts(x, y):
 
 ################################## MAIN CODE ####################################
 
-# Open ftp connection
-ftpserver = ftplib.FTP('ftp.byethost12.com', 'b12_22196264', 'equinox1234')
-
-# List the files in the current directory
-files = ftpserver.dir()
-ftpserver.cwd('/htdocs/')  # change directory to /htdocs/
 
 while True:
     try:
+        # Open ftp connection
+        ftpserver = ftplib.FTP('ftp.byethost12.com', 'b12_22196264', 'equinox1234')
+
+# List the files in the current directory
+        #files = ftpserver.dir()
+        ftpserver.cwd('/htdocs/')  # change directory to /htdocs/
+
         dictLevel = dict()
         dictTurb = dict()
         dictFlow = dict()
@@ -122,9 +121,9 @@ while True:
         dictTemp = dict()
         
         getfile(ftpserver, 'waterOld.csv')
-
+        print("checking for new data...")
         if "waterNew.csv" in ftpserver.nlst():
-            time.sleep(10)
+            time.sleep(12)
             print("FILE FOUND")
             getfile(ftpserver, 'waterNew.csv')
             
@@ -148,29 +147,29 @@ while True:
         plt.figure('Water Measurements')
         
         readfile('waterOld.csv', 'Level', dictLevel)
-        graphLine(dictLevel, 'Date and Time', 'Level', 'Water Level', 0.1, -0.005, 0.4, 2, 3, 1, 'b')
+        graphLine(dictLevel, 'Date and Time', 'Level (m)', 'Water Level', 0.1, -0.005, 1, 2, 3, 1, 'b')
 
         readfile('waterOld.csv', 'Flow 2', dictFlow)
-        graphLine(dictFlow, 'Date and Time', 'Flow Rate', 'Flow Rate', 0.1, -1, 50, 2, 3, 2, 'c')
+        graphLine(dictFlow, 'Date and Time', 'Flow Rate (L/hr)', 'Flow Rate', 0.1, -1, 300, 2, 3, 2, 'c')
 
         readfile('waterOld.csv', 'Turb', dictTurb)
-        graphLine(dictTurb, 'Date and Time', 'Turbidity', 'Turbidity', 0.1, -10, 3100, 2, 3, 3, 'g')
+        graphLine(dictTurb, 'Date and Time', 'Turbidity (NTU)', 'Turbidity', 0.1, -10, 3100, 2, 3, 3, 'g')
 
         readfile('waterOld.csv', 'PH', dictPH)
         graphLine(dictPH, 'Date and Time', 'pH', 'pH', 0.1, 0, 14, 2, 3, 4, 'm')
 
         readfile('waterOld.csv', 'Temp', dictTemp)
-        graphLine(dictTemp, 'Date and Time', 'Temperature', 'Temperature', 0.1, 0, 80, 2, 3, 5, 'r')
+        graphLine(dictTemp, 'Date and Time', 'Temperature (^C)', 'Temperature', 0.1, 0, 80, 2, 3, 5, 'r')
 
         readfile('waterOld.csv', 'EC', dictEC)
-        graphLine(dictEC, 'Date and Time', 'EC', 'Electric Conductivity', 0.1, 0, 5000, 2, 3, 6, 'k')
+        graphLine(dictEC, 'Date and Time', 'EC', 'Electric Conductivity (uS/m)', 0.1, 0, 8000, 2, 3, 6, 'k')
 
         plt.tight_layout()
         
         #plt.cla()
         uploadfile(ftpserver, 'waterOld.csv')
 
-        
+        ftpserver.close()
     # break the loop using "ctrl c"
     except KeyboardInterrupt:
         break
