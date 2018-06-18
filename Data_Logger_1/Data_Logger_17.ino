@@ -60,9 +60,9 @@ const int waterStatusFrequency = 10;     // Enter how often measurments for wate
 const int batteryStatusFrequency = 60;  // Enter how often measurments for water status should be taken (in seconds)
 const int loopDelay = 1000;
 const int transmitFrequency = 60;       // Enter how often measurments should transmitted (in seconds) 
-const int sensorNum = 10; 
+const int sensorNum = 7; 
 
-struct sensor sensorArray[sensorNum] = {{1, 5, 6, -1}},{2, 2, -1, -1},{2, 3, -1, -1},{3, A14, -1, -1},{8, A13, -1, -1},{6, A15, -1, -1},{7, -1, -1, -1},{4, A8, -1, -1},{4, A9, -1, -1},{5, A1, A4, 13}};  
+struct sensor sensorArray[sensorNum] = {{1, 5, 6, -1},{2, 2, -1, -1},{2, 3, -1, -1},{3, A14, -1, -1},{8, A13, -1, -1},{6, A15, -1, -1},{7, -1, -1, -1}};  
                                                           // Enter the sensor type, pin A, pin B and pinC
                                                           // sensor type found from list of pre-set sensors
                                                           // if pin not used then enter -1
@@ -236,9 +236,9 @@ void loop() {
     sendWater = true;
   }
 
-  if((now.second() % 60) && (now.minute() % 20) == 0){
-    sendBattery = true;
-  }
+  //if((now.second() % 60) && (now.minute() % 20) == 0){
+  //  sendBattery = true;
+  //}
 
   if(sendWater){
     sendData(waterStatusFile);
@@ -306,7 +306,7 @@ int readDataFile(char fileName[], int &startLoc, char contentArray[]){
   }
   else{
     Serial.println("Error reading data file for transmission");
-    return;
+    return 0;
   }
 
   int count = 0;
@@ -770,7 +770,7 @@ void logSensorMeasurements(DateTime now, char fileName[], bool isBatterStatus){
           break;
         case 8:
           float ECcurrent;
-          ECcurrent = getEC(A11);
+          ECcurrent = getEC(sensorArray[i].PinA);
 
           //dataFile.print("Electrical conductivity (mS/m): ");
           dataFile.print(ECcurrent);
@@ -885,7 +885,7 @@ float turbidity(int turbPin){
   if(voltage < 2.5){
     voltage = 2.5;
   }
-  float NTU = -1120.4*sq(voltage) + 5742.3*voltage - 4352.9;
+  float NTU = -1120.4*sq(voltage) + 5742.3*voltage - 4352.9; // relationship obtained from the sensor documentation site
   if(NTU < 0){
     NTU = 0;
   }
