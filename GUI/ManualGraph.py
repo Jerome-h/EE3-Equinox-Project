@@ -72,7 +72,7 @@ def getRange(startDate, endDate, dictionary, dictionaryRange):
             endFound = True
 
 
-# Plots the parameter dictionary as a line graph, also passes label inputs
+# Plots the parameter dictionary as a line graph
 def graphLine(dictionary, refresh, startDate, endDate, paramType):
     xlabel = 'Date and Time'
     # Defines graph properties dependant on parameter type specified
@@ -115,8 +115,8 @@ def graphLine(dictionary, refresh, startDate, endDate, paramType):
     # Extracts dictionary into two tuples
     lists = sorted(dictionary.items())
     x, y = zip(*lists)
-    xn = range(len(x))  # map your string labels to integers
-    # plt.figure(title)
+    # Map your string labels to integers
+    xn = range(len(x))
     plt.clf()
     plt.ylim(ymin,ymax)
     plt.plot(xn, y, 'g')
@@ -124,7 +124,6 @@ def graphLine(dictionary, refresh, startDate, endDate, paramType):
     plt.xlabel('{}'.format(xlabel)) 
     plt.ylabel('{}'.format(ylabel))
     plt.title('{}'.format(title))
-
     # Strips out labels to avoid crowding, helping user to better read the labels
     xlabels = list(x)
     for index, item in enumerate(xlabels):
