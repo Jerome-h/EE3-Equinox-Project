@@ -3,7 +3,7 @@
  *  6/18/2018
  *   
  *  Components needed:
- *  - Temperature sensor: LM35DZ/NOPB (Texas Instrument) 
+ *  - Temperature sensor: LM35DZ/NOPB (Texas Instruments) 
  *    -- quantity: at least 2 to get an average battery temperature
  *  - Voltage module: resistances used are 300k and 75k ohms;
  *    -- potential divider ratio, R is 1/5 
