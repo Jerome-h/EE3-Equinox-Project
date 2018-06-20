@@ -901,12 +901,15 @@ float calcPH(int inPin){
 }
 
 float turbidity(int turbPin){
-  int sensorValue = analogRead(turbPin);    // read the input on analog pin 0:
-  float voltage = sensorValue * (5 / 1024.0); // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
+  int sensorValue = analogRead(pin);// read the input on analog pin 0:
+  voltage = sensorValue * (5 / 1024.0); // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
+  // the relationship is a quadratic equation where NTU will decrease when voltage is less than 2.5 which is not logical
+  // voltages less than 2.5 will be fixed at 2.5
   if(voltage < 2.5){
     voltage = 2.5;
   }
-  float NTU = -1120.4*sq(voltage) + 5742.3*voltage - 4352.9; // relationship obtained from the sensor documentation site
+  NTU = -1120.4*sq(voltage) + 5742.3*voltage - 4352.9; // relationship obtained from the documentation site
+  // NTU = 0 is the lowest value 
   if(NTU < 0){
     NTU = 0;
   }
@@ -954,15 +957,12 @@ void pulseCounter ()      // function that the interupt for flow rate calls
 
 
 int calcFlowRate(int hallsensor) {
-  
   int flowRate; 
-  
-  attachInterrupt(digitalPinToInterrupt(hallsensor), pulseCounter, RISING); 
+  attachInterrupt(digitalPinToInterrupt(hallsensor), pulseCounter, RISING); // attach interrupt
   pulseCount = 0;      
   delay (1000);                         
-  flowRate = (pulseCount * 60 / 7.5);   // calculating flow rate in L/hour  
-  detachInterrupt(digitalPinToInterrupt(hallsensor));
-
+  flowRate = (pulseCount * 60 / callibrationFactor);   // calculating flow rate in L/hour  
+  detachInterrupt(digitalPinToInterrupt(hallsensor)); // deattach interrupt
   return flowRate;
 }
 
