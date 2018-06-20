@@ -10,6 +10,7 @@ void loop() {
 }
 
 float calcPH(int inPin){  
+  offset = -3;
   int readingSum=0;
   float avgValue=0.0, pHVol=0.0;
 
@@ -26,5 +27,5 @@ float calcPH(int inPin){
   pHVol = avgValue*5.0/1024;
 
   // add calibration factor and offset 
-  return (3.40 * pHVol - 3.0);
+  return (3.5 * pHVol + offset);
 }
