@@ -879,20 +879,25 @@ float current_reading(int sensorPin){
  * _________________________________________________________________________
  */
 
-float calcPH(int inPin){  
-  
+float calcPH(int inPin){   
+  offset = -3;
   int readingSum=0;
   float avgValue=0.0, pHVol=0.0;
-  
+
+  // obtain 10 readings 
   for(int i=0; i<10; i++){
     readingSum += analogRead(inPin);
     delay(10);
   }
 
+  // get average value 
   avgValue = readingSum/10.0;
+
+  // convert to voltage
   pHVol = avgValue*5.0/1024;
-  
-  return (3.40 * pHVol - 3.0);
+
+  // add calibration factor and offset 
+  return (3.5 * pHVol + offset);
 }
 
 float turbidity(int turbPin){
