@@ -95,6 +95,7 @@ while True:
                     if re.search('Time', str(row)):
                         print("found header")
                     else:
+                        # make sure that waterOld.csv has the header names even though there's no data
                         with open('waterOld.csv', 'a') as csvfile:
                             print("got content")
                             print(row)
