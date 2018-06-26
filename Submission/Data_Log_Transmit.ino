@@ -798,16 +798,24 @@ float batteryHealth(int voltagePin, int currentPin, int gatePin){
     digitalWrite(gatePin, LOW);
     delay(5);
   
-    volt_compensated(voltagePin, OCVreading, OCvoltage);  //read and correct open circuit voltage
+    //read and correct open circuit voltage
+    OCvoltage = volt_compensated(voltagePin, OCVreading);  
+    OCvoltage += volt_compensated(voltagePin, OCVreading);
+    OCvoltage += volt_compensated(voltagePin, OCVreading);
+    OCvoltage /= 3;
 
     //turn on transistor to measure CCV and current
     digitalWrite(gatePin, HIGH);
     delay(5);
     
-    volt_compensated(voltagePin, CCVreading, CCvoltage);  //read and correct closed circuit voltage
+    //read and correct closed circuit voltage
+    CCvoltage = volt_compensated(voltagePin, CCVreading);  
+    CCvoltage += volt_compensated(voltagePin, CCVreading); 
+    CCvoltage += volt_compensated(voltagePin, CCVreading); 
+    CCvoltage /= 3;
   }
   
-  current = (current_reading(currentPin)+current_reading(currentPin)+current_reading(currentPin))/3.0; //read load current
+  current = (current_reading(currentPin)+current_reading(currentPin)+current_reading(currentPin)+current_reading(currentPin)+current_reading(currentPin))/5.0; //read load current
   R_internal = (OCvoltage - CCvoltage)/current;         //calculate internal resistance
   State_Health = 100* (R_internal - 1.0)/(0.084 - 1.0); // calculate state health
 
@@ -818,9 +826,10 @@ float batteryHealth(int voltagePin, int currentPin, int gatePin){
   return State_Health;
 }
 
-void volt_compensated(int sensorPin, int& value, float& voltage){
+float volt_compensated(int sensorPin, int& value){
   value = analogRead(sensorPin)+(batteryTMean - 25)*(0.1769472);
-  voltage = (value * 25.0) / 1024.0;
+  float voltage = (value * 25.0) / 1024.0;
+  return voltage;
 }
 
 float current_reading(int sensorPin){
