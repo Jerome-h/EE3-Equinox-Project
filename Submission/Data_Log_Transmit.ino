@@ -1,5 +1,5 @@
-#include<SD.h>                  // standard SD libary
-#include<SPI.h>                 // standard SPI libary for SD card
+#include <SD.h>                  // standard SD libary
+#include  <SPI.h>                 // standard SPI libary for SD card
 #include <SoftwareSerial.h>     // allows serial communication on pins other than 1 and 2
 #include <String.h>             // standard libary for string manipulation 
 #include <Wire.h>               // needed for clock module DS3231
@@ -292,7 +292,7 @@ int readDataFile(char fileName[], int &startLoc, char contentArray[]){
   }
   else{
     Serial.println("Error reading data file for transmission");
-    return;
+    return 0;
   }
 
   int count = 0;
