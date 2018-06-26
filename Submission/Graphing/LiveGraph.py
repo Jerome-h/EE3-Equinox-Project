@@ -95,7 +95,7 @@ while True:
                     if re.search('Time', str(row)):
                         print("found header")
                     else:
-                        # make sure that waterOld.csv has the header names even though there's no data
+                        # make sure that waterOld.csv has the header names even though there's no data 
                         with open('waterOld.csv', 'a') as csvfile:
                             print("got content")
                             print(row)
@@ -110,7 +110,7 @@ while True:
 
         # Read in data and plot to sub plots on the same figure
         readfile('waterOld.csv', 'Level', dictLevel)
-        graphLine(dictLevel, 'Date and Time', 'Level (m)', 'Water Level', 0.1, -0.005, 1, 2, 3, 1, 'b')
+        graphLine(dictLevel, 'Date and Time', 'Level (m)', 'Water Level', 0.1, -10, 2500, 2, 3, 1, 'b')
 
         readfile('waterOld.csv', 'Flow 2', dictFlow)
         graphLine(dictFlow, 'Date and Time', 'Flow Rate (L/hr)', 'Flow Rate', 0.1, -1, 300, 2, 3, 2, 'c')
@@ -136,4 +136,3 @@ while True:
     # Break the loop using "ctrl c"
     except KeyboardInterrupt:
         break
-
